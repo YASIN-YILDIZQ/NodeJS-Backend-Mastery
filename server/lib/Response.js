@@ -7,7 +7,7 @@ class Response {
         return { code, data };
     }
 
-    static errorRespose(error) {
+    static errorRespose(error,code) {
         // error.message'in var olup olmadığını kontrol et
         const errorMessage = error?.message || error;
 
@@ -19,7 +19,7 @@ class Response {
         }
 
         return {
-            code: Enum.HTTP_CODES.INTERNAL_SERVER_ERROR,
+            code:code|| Enum.HTTP_CODES.INTERNAL_SERVER_ERROR,
             error: { message: errorMessage }
         };
     }
