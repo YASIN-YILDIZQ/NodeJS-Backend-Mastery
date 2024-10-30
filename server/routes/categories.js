@@ -3,7 +3,9 @@ const Response = require('../lib/Response');
 const Categories = require('../db/models/Categories');
 const ErrorCostumer = require('../lib/ErrorCostumer');
 const router = express.Router();
+const AuditLogsLib = require('../lib/AuditLogs');
 const Enum=require('../config/Enum')
+const  logger = require('../lib/logger/LoggerClass');
 
 // GET categories
 router.get('/', async (req, res) => {
@@ -29,10 +31,13 @@ router.post("/add", async (req, res) => {
       
       }
         const category = await Categories.create(req.body);
+        AuditLogsLib.info(req.user?.email,"Categories","Kategori eklendi",category)
+        logger.info(req.user?.email,"Categories","Kategori eklendi",category)
 
        
         res.json(Response.successRespose(category));
     } catch (error) {
+      logger.error(req.user?.email,"Categories","Kategori eklendi",error)
         console.error(error);
         res.status(500).json(Response.errorRespose(error));
     }
@@ -49,6 +54,8 @@ router.put("/update", async (req, res) => {
         if (!category) {
             return res.status(404).json(Response.errorRespose({ message: "Kategori bulunamadı" }));
         }
+        AuditLogsLib.info(req.user?.email,"Categories","Kategori güncellendi",{_id:req.body._id, ...category})
+
         res.json(Response.successRespose(category));
     } catch (error) {
         console.error(error);
@@ -66,6 +73,8 @@ router.delete("/delete", async (req, res) => {
         if (!category) {
             return res.status(404).json(Response.errorRespose({ message: "Kategori bulunamadı" }));
         }
+        AuditLogsLib.info(req.user?.email,"Categories","Kategori silindi",{_id:req.body._id})
+
         res.json(Response.successRespose(category));
     } catch (error) {
         console.error(error);

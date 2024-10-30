@@ -4,7 +4,7 @@ const  auditLogSchema = new mongoose.Schema({
     email: String,
     location: String,
     proc_type: String,
-    log:Object.Schema.Types.Mixed
+    log:{type:mongoose.SchemaTypes.Mixed}
 },{valueKey:false,timestamps: true});
 
 module.exports = mongoose.model('AuditLogs', auditLogSchema)
